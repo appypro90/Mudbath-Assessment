@@ -11,12 +11,11 @@ namespace Dal.Helpers
             var actualPath = path.Substring(0, path.LastIndexOf("bin", StringComparison.Ordinal));
             var projectPath = new Uri(actualPath).LocalPath;
             var filePath = projectPath + @fileName;
-            string json;
-            json = ReadJsonFile(filePath);
+            var json = ReadJsonFile(filePath);
             return json;
         }
 
-        public static string ReadJsonFile(string fileName)
+        private static string ReadJsonFile(string fileName)
         {
             string json;
             using (var r = new StreamReader(fileName))
