@@ -1,0 +1,51 @@
+<mat-toolbar>
+  <span>{{data.isReadonly ? 'View':'Edit'}} item</span>
+</mat-toolbar>
+<form [formGroup]="productForm" fxLayout="column" fxLayoutAlign="space-around center" style="width: 100%;" (submit)='submitProduct()'>
+  <mat-form-field class="example-full-width">
+    <mat-label>Id</mat-label>
+    <input matInput  formControlName="id" readonly>
+  </mat-form-field>
+  <mat-form-field class="example-full-width">
+    <mat-label>Name</mat-label>
+    <input matInput placeholder="name" formControlName="name">
+  </mat-form-field>
+  <mat-form-field class="example-full-width">
+    <mat-label>price</mat-label>
+    <input matInput placeholder="Amount" formControlName="priceAmount">
+  </mat-form-field>
+  <mat-form-field class="example-full-width">
+    <mat-label>Description</mat-label>
+    <input matInput placeholder="description" formControlName="description">
+  </mat-form-field>
+  <mat-form-field appearance="fill" class="example-full-width">
+    <mat-label>Currency</mat-label>
+    <mat-select formControlName="priceBase">
+      <mat-option></mat-option>
+      <mat-option [value]="option.base" *ngFor="let option of exchangeRates">{{ option.base }}</mat-option>
+    </mat-select>
+  </mat-form-field>
+  
+
+  <mat-form-field class="example-full-width">
+    <mat-label>Related Products</mat-label>
+    <mat-chip-list #chipList aria-label="Product selection" [disabled]="data.isReadonly">
+      <mat-chip *ngFor="let product of relatedproducts" [selectable]="true" [removable]="true"
+        (removed)="remove(product)">
+        {{product.name + ' - price:' + product.price.amount}}
+        <mat-icon matChipRemove>cancel</mat-icon>
+      </mat-chip>
+      <input placeholder="New product..." #prodctInput [formControl]="relatedProductsControl" [matAutocomplete]="auto"
+        [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"  [disabled]="data.isReadonly">
+    </mat-chip-list>
+    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+      <mat-option *ngFor="let product of filteredProducts" [value]="product.name">
+        {{product.name + ' (' + product.id + ')'}}
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+
+  <div>
+    <button mat-button type="submit" color='primary' [disabled]='!productForm.valid' *ngIf='!data.isReadonly'>SAVE</button>
+  </div>
+  <form>
